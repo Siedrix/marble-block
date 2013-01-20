@@ -1,0 +1,27 @@
+{
+    "name": "MarbelBlock",
+    "version": "0.0.1-17",
+    "subdomain": "marbelblock",
+    "dependencies": {
+        "express": "3.0.5",
+        "consolidate": "0.6.0",
+        "swig": "0.13.4",
+        "requirejs": "2.1.2",
+        "passport": "0.1.15",
+        "passport-twitter": "0.1.4",
+        "passport-facebook": "0.1.4",
+        "resourceful": "0.3.3",
+        "connect-redis": "1.4.5"
+    },
+    "devDependencies": {
+        "vows": "*",
+        "chimera": "*",
+        "zombie": "*"
+    },
+    "engines": {
+        "node": "0.8.x"
+    },
+    "scripts": {
+        "start": "server.js"
+    }
+}

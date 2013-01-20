@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="wrapper">
+	{% if user.strategy === "twitter"%}
+	<div>
+		<h1><img src="{{user.profile._json.profile_image_url}}"/> {{user.profile.username}}</h1>
+		<h2>Complete your data</h2>
+	</div>
+	<form method="POST" action="/register/create-user">
+		<p>
+			<label>Username:</label>
+			<input type="text" name="username" value="{{ user.profile.username }}"/>
+		</p>
+		<p>
+			<label>Name:</label>
+			<input type="text" name="displayName" value="{{ user.profile.displayName }}"/>
+		</p>
+		<p>
+			<input type="submit" value="Create Account">
+		</p>
+	</form>
+	{% endif%}
+
+	{% if user.strategy === "facebook"%}
+	<div>
+		<h1>{{user.profile.username}}</h1>
+		<h2>Complete your data</h2>
+	</div>
+	<form method="POST" action="/register/create-user">
+		<p>
+			<label>Username:</label>
+			<input type="text" name="username" value="{{ user.profile.username }}"/>
+		</p>
+		<p>
+			<label>Name:</label>
+			<input type="text" name="displayName" value="{{ user.profile.displayName }}"/>
+		</p>
+		<p>
+			<input type="submit" value="Create Account">
+		</p>
+	</form>
+	{% endif%}
+
+</div>
+{% endblock %}}
