@@ -66,7 +66,6 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 	server.set('views', './app/views');
 
 	server.get('/', function (req, res) {
-		debugger;
 		if(req.session.username){
 			res.redirect('/a');
 		}

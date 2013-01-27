@@ -3,6 +3,7 @@ var Browser = require("zombie"),
 	assert  = require("assert");
 
 var browser = new Browser();
+var TWITTER_PASSWORD = "XXX";
 
 vows.describe('Twitter Log in').addBatch({
     'Click on link': {
@@ -26,7 +27,7 @@ vows.describe('Twitter Log in').addBatch({
     		var topic = this;
 
     		browser.fill("session[username_or_email]", "Siedrix")
-			 .fill("session[password]", "XXX");
+			 .fill("session[password]", TWITTER_PASSWORD);
 
 			browser.pressButton(".buttons #allow", function() {
 			 	browser.visit("http://faceauth.siedrix.com:3000/auth/twitter", function () {
@@ -36,6 +37,7 @@ vows.describe('Twitter Log in').addBatch({
     	},
     	'User Should be on app url' : function() {
 			assert.equal(browser.location.href, "http://faceauth.siedrix.com:3000/a");
+			assert.equal(!!browser.query("#twitter"), true);
     	}
 	}
 }).run({}, function(results){

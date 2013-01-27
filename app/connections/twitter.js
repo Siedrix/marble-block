@@ -38,7 +38,7 @@ define(['lib/connection', 'passport','passport-twitter', 'app/models/user', 'con
 
 	twitter.setStrategy(twitterStrategy);
 
-	twitter.use('/auth/twitter',function(req, res, next){
+	twitter.use('/auth/twitter', Connection.preAuth ,function(req, res, next){
 		if(req.session.passport.user){
 			req.session.currentUser = req.session.passport.user;
 		}
