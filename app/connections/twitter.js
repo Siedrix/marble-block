@@ -38,17 +38,13 @@ define(['lib/connection', 'passport','passport-twitter', 'app/models/user', 'con
 
 	twitter.setStrategy(twitterStrategy);
 
-	twitter.use('/auth/twitter', Connection.preAuth ,function(req, res, next){
-		if(req.session.passport.user){
-			req.session.currentUser = req.session.passport.user;
-		}
-
-		next();
-	}, passport.authenticate('twitter'));
+	twitter.use('/auth/twitter', Connection.preAuth, passport.authenticate('twitter'));
 
 	twitter.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login?admin' }),
 	function(req, res) {
-		if(req.session.passport.user.isNewUser){
+    	if(req.session.oldPassport && req.session.oldPassport.user){
+    		res.redirect('/register/merge-connections');
+    	}else if(req.session.passport.user.isNewUser){
 			res.redirect('/register');
 		}else{
 	     	res.redirect('/a');

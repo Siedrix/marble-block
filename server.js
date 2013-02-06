@@ -89,6 +89,58 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 		});
 	});
 
+	server.get('/register/merge-connections', function(req, res){
+		User.get(req.session.oldPassport.user.id, function (err, doc) {
+			console.log(req.session.passport);
+			console.log(req.session.oldPassport);
+			console.log(doc);
+			if (err) {
+				res.send(err);
+				return;
+			}
+
+			if (!doc) {
+				res.send('No user found');
+				return;
+			}
+
+			var passportUser = req.session.passport.user,
+				user = doc;
+
+			if(passportUser.strategy === "twitter"){
+				delete passportUser.profile.photos;
+				delete passportUser.profile._raw;
+
+				user.twitter = {
+					token       : passportUser.token,
+					tokenSecret : passportUser.tokenSecret,
+					profile     : passportUser.profile,
+					username    : passportUser.profile.username.toLowerCase()
+				}
+			}				
+
+			if ( req.session.passport.user.strategy === "facebook" ){
+				delete passportUser.profile._raw;
+
+				user.facebook = {
+					token         : passportUser.accessToken,
+					refreshSecret : passportUser.refreshToken,
+					profile       : passportUser.profile,
+					username      : passportUser.profile.username.toLowerCase()
+				}				
+			}
+
+			user.save(function(){
+				delete req.session.oldPassport;
+				req.session.passport.user = user;
+
+				res.redirect('/a');
+				return;
+			});
+			// body...
+		});
+	});
+
 	server.post('/register/create-user', function (req, res) {
 		if(!req.session.passport.user){
 			res.redirect('/');
@@ -145,7 +197,7 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 	});
 
 	server.get('/log-out', function (req, res) {
-		delete req.session.passport.user;
+		req.session.destroy();
 
 		res.redirect('/');
 	});
@@ -183,10 +235,6 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 
         	res.redirect('http://twitter.com/'+user.twitter.username);
         });
-	});
-
-	server.get('/conf', function (req, res) {
-		res.send(conf);
 	});
 
 	server.listen(3000);

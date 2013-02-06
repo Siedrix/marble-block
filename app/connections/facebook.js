@@ -34,18 +34,14 @@ define(['lib/connection', 'passport','passport-facebook', 'app/models/user', 'co
 
 	facebook.setStrategy(facebookStrategy);
 
-	facebook.get('/auth/facebook', function(req, res, next){
-		if(req.session.passport.user){
-			req.session.currentUser = req.session.passport.user;
-		}
-
-		next();
-	},passport.authenticate('facebook',{ scope: ['read_stream', 'publish_actions'] }) );
+	facebook.get('/auth/facebook', Connection.preAuth, passport.authenticate('facebook',{ scope: ['read_stream', 'publish_actions'] }) );
 
 	facebook.get('/auth/facebook/callback', passport.authenticate('facebook', { 
         failureRedirect: '/login' 
     }),	function(req, res) {
-		if(req.session.passport.user.isNewUser){
+    	if(req.session.oldPassport && req.session.oldPassport.user){
+    		res.redirect('/register/merge-connections');
+    	}else if(req.session.passport.user.isNewUser){
 			res.redirect('/register');
 		}else{
 	     	res.redirect('/a');
