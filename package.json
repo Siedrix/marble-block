@@ -1,6 +1,6 @@
 {
     "name": "MarbelBlock",
-    "version": "0.0.1-19",
+    "version": "0.0.1-20",
     "subdomain": "marbleblock",
     "dependencies": {
         "express": "3.0.5",
@@ -16,7 +16,8 @@
     "devDependencies": {
         "vows": "*",
         "chimera": "*",
-        "zombie": "*"
+        "zombie": "*",
+        "request" : "*"
     },
     "engines": {
         "node": "0.8.x"
