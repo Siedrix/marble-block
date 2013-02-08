@@ -10,8 +10,13 @@ requirejs.config({
 
 requirejs(["../../lib/controller"], function (Controller) {
 	var express = require('express'),
-		server  = express(),
-		closable = server.listen(4000);
+		server  = express();
+
+	// Add post, cookie and session support
+	server.use(express.bodyParser());
+	server.use(express.cookieParser());	
+
+	var closable = server.listen(4000);
 
 	var controller = Controller({
 		path : 'controller'
@@ -28,6 +33,10 @@ requirejs(["../../lib/controller"], function (Controller) {
 		next();
 	}, function(req, res) {
 		res.send(req.data.body)
+	});
+
+	controller.post('/', function (req, res) {
+		res.send(req.body.post);
 	});
 	
 
@@ -64,6 +73,25 @@ requirejs(["../../lib/controller"], function (Controller) {
 			"controller main path return empty object" : function(err, response, body){
 				assert.equal (body, "multifunction");
 			}
+		}
+	}).addBatch({
+		"Post requests" : {
+			topic : function () {
+				var topic = this;
+				request.post({
+			        "headers" : {'content-type' : 'application/x-www-form-urlencoded'}, 
+			        "url"     : "http://localhost:4000/controller/",
+			        "form"    : {
+			            "post" : "lol"
+			        }
+			    }, function (err, response, body){
+					topic.callback(err, response, body);
+				});				
+			},
+			"Post should get post parameter send as response" : function (err, response, body) {
+				assert.equal (body, "lol");
+			}
+
 		}
 	}).run({}, function(results){
 		closable.close();
