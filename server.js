@@ -8,11 +8,20 @@ requirejs(["express",
 	"consolidate",
 	"swig",
 	"passport",
+	"conf",
+	//Conections
 	"app/connections/twitter",
 	"app/connections/facebook",
-	"app/models/user",
-	"conf"],
-function (express, cons, swig, passport, twitterConnection, facebookConnection, User, conf) {
+	//Controllers
+	"app/controllers/home",
+	"app/controllers/register",
+	//Models
+	"app/models/user"
+	],
+function (express, cons, swig, passport, conf,
+	twitterConnection, facebookConnection, 
+	homeController, registerController,
+	User) {
 	var RedisStore = require('connect-redis')(express),
 		server  = express();	
 
@@ -57,6 +66,7 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 	    done(null, obj);
 	});
 
+	// Services connected
 	twitterConnection(server, passport);
 	facebookConnection(server, passport);
 
@@ -65,131 +75,11 @@ function (express, cons, swig, passport, twitterConnection, facebookConnection, 
 	server.set('view engine', 'html');
 	server.set('views', './app/views');
 
-	server.get('/', function (req, res) {
-		if(req.session.username){
-			res.redirect('/a');
-		}
+	// Add Controllers
+	homeController(server);
+	registerController(server);
 
-		res.render('index/index');
-	});
-
-	server.get('/register', function (req, res) {
-		if (!req.session.passport.user) { 
-			res.redirect('/');
-			return;
-		}
-
-		if (!req.session.passport.user.isNewUser) {
-			res.redirect('/a');
-			return;
-		}
-
-		res.render('register/index', {
-			user : req.session.passport.user
-		});
-	});
-
-	server.get('/register/merge-connections', function(req, res){
-		User.get(req.session.oldPassport.user.id, function (err, doc) {
-			console.log(req.session.passport);
-			console.log(req.session.oldPassport);
-			console.log(doc);
-			if (err) {
-				res.send(err);
-				return;
-			}
-
-			if (!doc) {
-				res.send('No user found');
-				return;
-			}
-
-			var passportUser = req.session.passport.user,
-				user = doc;
-
-			if(passportUser.strategy === "twitter"){
-				delete passportUser.profile.photos;
-				delete passportUser.profile._raw;
-
-				user.twitter = {
-					token       : passportUser.token,
-					tokenSecret : passportUser.tokenSecret,
-					profile     : passportUser.profile,
-					username    : passportUser.profile.username.toLowerCase()
-				}
-			}				
-
-			if ( req.session.passport.user.strategy === "facebook" ){
-				delete passportUser.profile._raw;
-
-				user.facebook = {
-					token         : passportUser.accessToken,
-					refreshSecret : passportUser.refreshToken,
-					profile       : passportUser.profile,
-					username      : passportUser.profile.username.toLowerCase()
-				}				
-			}
-
-			user.save(function(){
-				delete req.session.oldPassport;
-				req.session.passport.user = user;
-
-				res.redirect('/a');
-				return;
-			});
-			// body...
-		});
-	});
-
-	server.post('/register/create-user', function (req, res) {
-		if(!req.session.passport.user){
-			res.redirect('/');
-			return;
-		}
-
-		var passportUser = req.session.passport.user;
-		var user = {
-			username    : req.body.username.toLowerCase(),
-			displayName : req.body.displayName,
-		}
-
-		if(passportUser.strategy === "twitter"){
-			delete passportUser.profile.photos;
-			delete passportUser.profile._raw;
-
-			user.twitter = {
-				token       : passportUser.token,
-				tokenSecret : passportUser.tokenSecret,
-				profile     : passportUser.profile,
-				username    : passportUser.profile.username.toLowerCase()
-			}
-		}
-
-		if(passportUser.strategy === "facebook"){
-			delete passportUser.profile._raw;
-
-			user.facebook = {
-				token         : passportUser.accessToken,
-				refreshSecret : passportUser.refreshToken,
-				profile       : passportUser.profile,
-				username      : passportUser.profile.username.toLowerCase()
-			}
-		}
-
-		user = new User(user);
-
-		user.save(function (err, doc) {
-			if(err){
-				res.send(500);
-				return;
-			}
-
-			req.session.passport.user = doc;
-
-			res.redirect('/a');
-		});
-	});
-
+	// Random routes, needs to be relocated
 	server.get('/a', function (req, res) {
 		res.render('app/index',{
 			user : req.session.passport.user
