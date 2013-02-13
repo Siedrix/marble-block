@@ -22,6 +22,29 @@ requirejs(["../../lib/controller"], function (Controller) {
 		path : 'controller'
 	});
 
+	var subcontroller = Controller({
+		path : 'subcontroller'
+	});
+
+	subcontroller.beforeEach(function(req, res, next){
+		if(req.query.sublolz){
+			res.send('sublolz');
+			return;
+		}
+
+		next();
+	});		
+
+	subcontroller.get('', function (req, res) {
+		res.send('Subcontrollers Present!!!')
+	});
+
+	subcontroller.post('', function (req, res) {
+		res.send('Subcontroller: '+req.body.post)
+	});
+
+	controller.attach(subcontroller);
+
 	controller.beforeEach(function(req, res, next){
 		if(req.query.lolz){
 			res.send('lolz');
@@ -130,6 +153,57 @@ requirejs(["../../lib/controller"], function (Controller) {
 			"Value should be modified to lolz" : function (err, response, body) {
 				assert.equal(body, 'lolz');
 			}			
+		}
+	}).addBatch({
+		"Subcontrollers" : {
+			topic : function () {
+				var topic = this;
+				request("http://localhost:4000/controller/subcontroller", function (err, response, body){
+					topic.callback(err, response, body);
+				});
+			},
+			"Value should on controller/subcontroller" : function (err, response, body) {
+				assert.equal(body, 'Subcontrollers Present!!!');
+			}
+		},
+		"Subcontrollers have post" : {
+			topic : function () {
+				var topic = this;
+				request.post({
+			        "headers" : {'content-type' : 'application/x-www-form-urlencoded'}, 
+			        "url"     : "http://localhost:4000/controller/subcontroller",
+			        "form"    : {
+			            "post" : "posted"
+			        }
+			    }, function (err, response, body){
+					topic.callback(err, response, body);
+				});
+			},
+			"Value should on post to controller/subcontroller" : function (err, response, body) {
+				assert.equal(body, 'Subcontroller: posted');
+			}			
+		},
+		"Subcontrollers have beforeEach" : {
+			topic : function () {
+				var topic = this;
+				request("http://localhost:4000/controller/subcontroller?sublolz=true", function (err, response, body){
+					topic.callback(err, response, body);
+				});
+			},
+			"Value should be beforeEach response from subcontroller" : function (err, response, body) {
+				assert.equal(body, 'sublolz');
+			}
+		},
+		"Subcontrollers have controller beforeEach" : {
+			topic : function () {
+				var topic = this;
+				request("http://localhost:4000/controller/subcontroller?lolz=true", function (err, response, body){
+					topic.callback(err, response, body);
+				});
+			},
+			"Value should be beforeEach response from controller" : function (err, response, body) {
+				assert.equal(body, 'lolz');
+			}
 		}
 	}).run({}, function(results){
 		closable.close();
