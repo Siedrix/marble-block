@@ -18,32 +18,10 @@ requirejs(["../../lib/controller"], function (Controller) {
 
 	var closable = server.listen(4000);
 
+	// Controller
 	var controller = Controller({
 		path : 'controller'
 	});
-
-	var subcontroller = Controller({
-		path : 'subcontroller'
-	});
-
-	subcontroller.beforeEach(function(req, res, next){
-		if(req.query.sublolz){
-			res.send('sublolz');
-			return;
-		}
-
-		next();
-	});		
-
-	subcontroller.get('', function (req, res) {
-		res.send('Subcontrollers Present!!!')
-	});
-
-	subcontroller.post('', function (req, res) {
-		res.send('Subcontroller: '+req.body.post)
-	});
-
-	controller.attach(subcontroller);
 
 	controller.beforeEach(function(req, res, next){
 		if(req.query.lolz){
@@ -70,8 +48,31 @@ requirejs(["../../lib/controller"], function (Controller) {
 	controller.post('/', function (req, res) {
 		res.send(req.body.post);
 	});
-	
 
+	// Subcontroller
+	var subcontroller = Controller({
+		path : 'subcontroller'
+	});
+
+	subcontroller.beforeEach(function(req, res, next){
+		if(req.query.sublolz){
+			res.send('sublolz');
+			return;
+		}
+
+		next();
+	});		
+
+	subcontroller.get('', function (req, res) {
+		res.send('Subcontrollers Present!!!')
+	});
+
+	subcontroller.post('', function (req, res) {
+		res.send('Subcontroller: '+req.body.post)
+	});
+
+	// Merge controler and subcontroller to the express server;
+	controller.attach(subcontroller);
 	controller(server);
 
 	vows.describe('Basic Controller test').addBatch({

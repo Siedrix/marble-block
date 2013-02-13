@@ -4,7 +4,7 @@ define(['lib/controller'],function(Controller){
 	});
 
 	appController.beforeEach(function(req, res, next){
-		if(!req.session.username){
+		if(!req.session.passport.user){
 			res.redirect('/');
 			return 
 		}
