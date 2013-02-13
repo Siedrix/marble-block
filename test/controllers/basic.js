@@ -22,6 +22,15 @@ requirejs(["../../lib/controller"], function (Controller) {
 		path : 'controller'
 	});
 
+	controller.beforeEach(function(req, res, next){
+		if(req.query.lolz){
+			res.send('lolz');
+			return;
+		}
+
+		next();
+	});
+
 	controller.get('/', function(req, res){
 		res.send("{}")
 	});
@@ -92,6 +101,35 @@ requirejs(["../../lib/controller"], function (Controller) {
 				assert.equal (body, "lol");
 			}
 
+		}
+	}).addBatch({
+		"beforeEach" : {
+			topic : function () {
+				var topic = this;
+				request("http://localhost:4000/controller/?lolz=true", function (err, response, body){
+					topic.callback(err, response, body);
+				});
+			},
+			"Value should be modified to lolz" : function (err, response, body) {
+				assert.equal(body, 'lolz');
+			}
+		},
+		"beforeEach with post" : {
+			topic : function () {
+				var topic = this;
+				request.post({
+			        "headers" : {'content-type' : 'application/x-www-form-urlencoded'}, 
+			        "url"     : "http://localhost:4000/controller/?lolz=true",
+			        "form"    : {
+			            "post" : "lol"
+			        }
+			    }, function (err, response, body){
+					topic.callback(err, response, body);
+				});		
+			},
+			"Value should be modified to lolz" : function (err, response, body) {
+				assert.equal(body, 'lolz');
+			}			
 		}
 	}).run({}, function(results){
 		closable.close();
