@@ -15,12 +15,13 @@ requirejs(["express",
 	//Controllers
 	"app/controllers/home",
 	"app/controllers/register",
+	"app/controllers/app",
 	//Models
 	"app/models/user"
 	],
 function (express, cons, swig, passport, conf,
 	twitterConnection, facebookConnection, 
-	homeController, registerController,
+	homeController, registerController, appController,
 	User) {
 	var RedisStore = require('connect-redis')(express),
 		server  = express();	
@@ -78,14 +79,9 @@ function (express, cons, swig, passport, conf,
 	// Add Controllers
 	homeController(server);
 	registerController(server);
+	appController(server);
 
 	// Random routes, needs to be relocated
-	server.get('/a', function (req, res) {
-		res.render('app/index',{
-			user : req.session.passport.user
-		});
-	});
-
 	server.get('/log-out', function (req, res) {
 		req.session.destroy();
 
