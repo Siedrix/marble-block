@@ -5,6 +5,7 @@ var Browser = require("zombie"),
 var browser = new Browser();
 var FACEBOOK_PASSWORD = "XXX";
 
+// Creates a new user on facebook
 vows.describe('Twitter Log in').addBatch({
     'Click on link': {
         topic: function () {

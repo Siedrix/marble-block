@@ -1,0 +1,26 @@
+{
+	"twitter"  : {
+		"consumerKey"    : "",
+		"consumerSecret" : "",
+		"callbackUrl"    : ""
+	},
+	"facebook" : {
+		"appId"       : "",
+		"appSecret"   : "",
+		"callbackUrl" : ""
+	},
+	"couchDb" : {
+		"user" : "",
+		"pass" : "",
+		"host" : "http://localhost",
+		"port" : 5984,
+		"db"   : "marbleblock"
+	},
+	"redis" : {
+		"secret" : "somesecret",
+		"host"   : "localhost",
+		"port"   : "6379",
+		"user"   : "",
+		"pass"   : ""		
+	}
+}

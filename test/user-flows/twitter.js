@@ -5,6 +5,7 @@ var Browser = require("zombie"),
 var browser = new Browser();
 var TWITTER_PASSWORD = "XXX";
 
+//This flow logs a user that already exists using twitter
 vows.describe('Twitter Log in').addBatch({
     'Click on link': {
         topic: function () {
