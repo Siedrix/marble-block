@@ -1,30 +1,31 @@
 define(['lib/model'], function(models){
-	var User = models.define('user', function () {
-		//Properties
-		this.string('username');
-		this.string('email');
+	var Schema = models.Schema;
 
-		// Social profiles
-		this.object('twitter');
-		this.object('facebook');
-
-		this.filter('byTwitterUser',{include_docs:true}, {
-			map : function(doc) {
-				if (doc.resource === "User" && doc.twitter) {
-					emit( doc.twitter.username, null );
-				}
-			}
-		});
-
-		this.filter('byFacebookUser',{include_docs:true}, {
-			map : function(doc) {
-				if (doc.resource === "User" && doc.facebook) {
-					emit( doc.facebook.username, null );
-				}
-			}
-		});
-
+	var userSchema = models.Schema({ 
+		username    : 'string',
+		email       : 'string',
+		displayName : 'string',
+		twitter     : Schema.Types.Mixed,
+		facebook    : Schema.Types.Mixed
 	});
 
+	var User = models.model('user', userSchema);
+
+	User.byTwitterUser = function(twitterUsername, done){
+		User.find({
+			"twitter.username" : twitterUsername
+		}, function(err, user){
+			done(err, user);
+		});
+	};
+
+	User.byFacebookUser = function(facebookUsername, done){
+		User.find({
+			"facebook.username" : facebookUsername
+		}, function(err, user){
+			done(err, user);
+		});
+	};
+	
 	return User;	
 });

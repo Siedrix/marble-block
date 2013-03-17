@@ -13,9 +13,7 @@ define(['lib/connection', 'passport','passport-twitter', 'app/models/user', 'con
 	    consumerSecret: TWITTER_CONSUMER_SECRET,
 	    callbackURL: conf.twitter.callbackUrl
 	},function(token, tokenSecret, profile, done) {
-		console.log('Enter strategy check');
 		User.byTwitterUser(profile.username.toLowerCase(), function (err, docs) {
-			console.log('Made query for user', err, docs);
 	        if(err){
 	            done(err, null);
 	            return;

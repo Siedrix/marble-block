@@ -20,11 +20,7 @@ define(['lib/controller', 'app/models/user'],function(Controller, User){
 	});
 
 	registerController.get('/merge-connections', function(req, res){
-		User.get(req.session.oldPassport.user.id, function (err, doc) {
-			console.log(req.session.passport);
-			console.log(req.session.oldPassport);
-			console.log(doc);
-
+		User.find({id : req.session.oldPassport.user.id}, function (err, doc) {
 			if (err) {
 				res.send(err);
 				return;
@@ -36,7 +32,7 @@ define(['lib/controller', 'app/models/user'],function(Controller, User){
 			}
 
 			var passportUser = req.session.passport.user,
-				user = doc;
+				user = doc[0];
 
 			if(passportUser.strategy === "twitter"){
 				delete passportUser.profile.photos;
