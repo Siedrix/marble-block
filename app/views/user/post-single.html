@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="wrapper">
+	<h2>{{post.title}} by {{post.owner.displayName}}</h2>
+
+	<div class="post">
+		<div>{{ post.content }}</div>
+	</div>
+
+</div>
+{% endblock %}}

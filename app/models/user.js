@@ -1,7 +1,7 @@
-define(['lib/model'], function(models){
+define(['lib/model','app/models/post'], function(models, Post){
 	var Schema = models.Schema;
 
-	var userSchema = models.Schema({ 
+	var userSchema = Schema({ 
 		username    : 'string',
 		email       : 'string',
 		displayName : 'string',
@@ -26,6 +26,6 @@ define(['lib/model'], function(models){
 			done(err, user);
 		});
 	};
-	
+
 	return User;	
 });

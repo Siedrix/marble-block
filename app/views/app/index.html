@@ -3,25 +3,31 @@
 {% block content %}
 <div id="wrapper">
 	<h2>Welcome to Marble block, {{user.displayName}}</h2>
-	{% if user.twitter && user.twitter.username %}
-	<form id="twitter" method="POST" action="/user/tweet">
-		<h4>Tweet</h4>
-		<p><textarea name="tweet"></textarea></p>
-		<p class="right"><input type="submit" value="Tweet"></p>
+
+	<form id="post" method="POST" action="/a/post/new">
+		<h4>Post</h4>
+		<p><input type="text" name="title"></textarea></p>
+		<p><textarea name="content"></textarea></p>
+		<p class="right"><input type="submit" value="Create post"></p>
 	</form>
-	{% else%}
+
+	{% if not user.twitter %}
 	<p><a href="/auth/twitter">Add Twitter acount to your profile</a><p>
 	{% endif%}
 
-	{% if user.facebook && user.facebook.username %}
-	<form method="POST" action="/user/post-to-wall">
-		<h4>Write to your wall</h4>
-		<p><textarea name="wall"></textarea></p>
-		<p class="right"><input type="submit" value="Post"></p>
-	</form>
-	{% else%}
+	{% if not user.facebook %}
 	<p><a href="/auth/facebook">Add Facebook acount to your profile</a><p>
 	{% endif%}
+
+
+	<div id="posts">
+	{% for post in posts %}
+		<div class="post">
+			<h4><a href="/a/user/{{ post.owner.username }}/post/{{ post._id }}">{{ post.title }}</a> por <a href="/a/user/{{ post.owner.username }}">{{ post.owner.username }}</a></h4>
+			<div>{{ post.content }}</div>
+		</div>
+	{% endfor %}
+	</div>	
 
 	<p style="text-align:right"><a href="/log-out">Log out</a></p>
 </div>

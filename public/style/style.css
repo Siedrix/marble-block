@@ -20,3 +20,16 @@ textarea {
 .right {
 	text-align: right;
 }
+
+.post {
+	margin-bottom: 20px;
+	border-bottom: 1px solid gray;
+	padding-bottom: 5px;	
+}
+
+.post > div {
+	font-family: JosefinSlab;
+	padding: 0 5px;
+	color: #222;
+	text-shadow: 1px 1px 1px #fff;
+}
