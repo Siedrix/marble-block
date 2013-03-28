@@ -10,7 +10,7 @@
         "passport": "0.1.15",
         "passport-twitter": "0.1.4",
         "passport-facebook": "0.1.4",
-        "mongoose" : "*",
+        "mongoose" : "3.5.9",
         "connect-redis": "1.4.5"
     },
     "devDependencies": {
