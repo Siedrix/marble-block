@@ -1,4 +1,5 @@
-var requirejs = require('requirejs');
+var requirejs = require('requirejs'),
+    argv = require('optimist').argv;
 
 requirejs.config({
     nodeRequire: require

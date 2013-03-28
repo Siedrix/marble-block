@@ -1,4 +1,4 @@
-define( function () {
+define(['optimist'], function (optimist) {
 	var fs = require('fs');
  	var enviroment;
 
@@ -8,7 +8,7 @@ define( function () {
 		return JSON.parse(conf);
 	}
 
- 	if( process.env.NODE_ENV === 'production' ){
+ 	if( process.env.NODE_ENV === 'production' || optimist.argv.env === 'production' ){
  		enviroment = readConf('./conf/prod.json');
  		enviroment.env = "production";
  	}else{

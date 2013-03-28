@@ -1,7 +1,7 @@
 define([
 	'lib/controller', 
 	'app/models/user',
-	'app/models/post',
+	'app/models/post'
 ],function(Controller, User, Post){
 	var userController = Controller({
 		path : "user/:username"

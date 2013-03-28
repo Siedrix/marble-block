@@ -17,6 +17,19 @@ define(['lib/controller', 'app/models/post'],function(Controller, Post){
 				return;
 			}
 
+			// Bad hack
+			post.owner.username = req.user.username;
+
+			debugger;
+
+			if(req.body.twitter === "on"){
+				req.user.shareToTwitter({message : post.title, url : post.url()});
+			}
+
+			if(req.body.facebook === "on"){
+				req.user.shareToFacebook({message : post.title, url : post.url()});
+			}
+
 			res.redirect('/a/user/'+ req.user.username);
 		});
 	});

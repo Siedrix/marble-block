@@ -8,7 +8,15 @@
 		<h4>Post</h4>
 		<p><input type="text" name="title"></textarea></p>
 		<p><textarea name="content"></textarea></p>
-		<p class="right"><input type="submit" value="Create post"></p>
+		<p class="right">
+			<label>
+				share on : twitter 
+				<input type="checkbox" name="twitter"> 
+				facebook: 
+				<input type="checkbox" name="facebook">
+			</label>
+			<input type="submit" value="Create post">
+		</p>
 	</form>
 
 	{% if not user.twitter %}
