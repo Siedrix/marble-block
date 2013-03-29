@@ -9,12 +9,8 @@
 		"appSecret"   : "",
 		"callbackUrl" : ""
 	},
-	"couchDb" : {
-		"user" : "",
-		"pass" : "",
-		"host" : "http://localhost",
-		"port" : 5984,
-		"db"   : "marbleblock"
+	"mongoDb" : {
+		"db" : ""
 	},
 	"redis" : {
 		"secret" : "somesecret",

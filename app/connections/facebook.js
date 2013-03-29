@@ -6,11 +6,16 @@ define(['lib/connection', 'passport','passport-facebook', 'app/models/user', 'co
 	var FACEBOOK_APP_ID     = conf.facebook.appId;
 	var FACEBOOK_APP_SECRET = conf.facebook.appSecret;
 
+	console.log('User', User);
+
 	var facebookStrategy = new FacebookStrategy({
 		clientID: FACEBOOK_APP_ID,
 		clientSecret: FACEBOOK_APP_SECRET,
 		callbackURL: conf.facebook.callbackUrl
 	},function(accessToken, refreshToken, profile, done) {
+		// Had a clousure problem, User was not definied.
+		var User = require('app/models/user');
+
 		User.byFacebookUser(profile.username.toLowerCase(), function (err, docs) {
 	        if(err){
 	            done(err, null);

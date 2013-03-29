@@ -85,5 +85,7 @@ define([
    		});	
 	};	
 
+	console.log('returning User', typeof User)
+
 	return User;	
 });

@@ -1,6 +1,6 @@
 {
     "name": "MarbelBlock",
-    "version": "0.0.2",
+    "version": "0.0.2-2",
     "subdomain": "marbleblock",
     "dependencies": {
         "express": "3.0.5",

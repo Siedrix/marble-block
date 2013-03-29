@@ -5,13 +5,14 @@ define(['lib/connection', 'passport','passport-twitter', 'app/models/user', 'con
 
 	var TWITTER_CONSUMER_KEY    = conf.twitter.consumerKey;
 	var TWITTER_CONSUMER_SECRET = conf.twitter.consumerSecret;
+	var callbackUrl             = conf.baseUrl + "/auth/twitter/callback"; 
 
-	console.log("Twitter url", conf.twitter.callbackUrl);
+	console.log(callbackUrl);
 
 	var twitterStrategy = new TwitterStrategy({
 	    consumerKey: TWITTER_CONSUMER_KEY,
 	    consumerSecret: TWITTER_CONSUMER_SECRET,
-	    callbackURL: conf.twitter.callbackUrl
+	    callbackURL: callbackUrl
 	},function(token, tokenSecret, profile, done) {
 		User.byTwitterUser(profile.username.toLowerCase(), function (err, docs) {
 	        if(err){
